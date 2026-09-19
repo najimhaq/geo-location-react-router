@@ -5,7 +5,7 @@ import { getGeoLocation } from '../services/get-geoLocation';
 const LocationModal = ({ onClose }) => {
   const [city, setCity] = useState('');
 
-  const handleSubmit = (e) => {
+  const  handleSubmit = async (e) => {
     e.preventDefault();
     const location = city.trim();
     if (!location) {
@@ -13,16 +13,14 @@ const LocationModal = ({ onClose }) => {
       return;
     }
     console.log(location);
-    getGeoLocation(location)
-      .then((coords) => {
-        console.log('Coordinates:', coords);
-        // You can use the coordinates here, e.g., pass them to a parent component or make another API call
-      })
-      .catch((error) => {
-        console.error('Error fetching geolocation:', error);
-        alert('City not found. Please try again.');
-      });
-    // onClose();
+    try {
+      const data = await getGeoLocation(location);
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching geolocation:', error);
+      alert('City not found. Please try again.');
+    }
+
   };
 
   const handleCityChange = (e) => {
