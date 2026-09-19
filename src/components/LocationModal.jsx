@@ -1,10 +1,15 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { getGeoLocation } from '../services/get-geoLocation';
+import { useNavigate } from 'react-router';
 
 const LocationModal = ({ onClose }) => {
+  const navigate = useNavigate();
   const [city, setCity] = useState('');
 
+  const gotoPage = (location)=>{
+    navigate('/weather', { state: { city: location } });
+  }
   const  handleSubmit = async (e) => {
     e.preventDefault();
     const location = city.trim();
@@ -15,7 +20,12 @@ const LocationModal = ({ onClose }) => {
     console.log(location);
     try {
       const data = await getGeoLocation(location);
-      console.log(data);
+      // console.log(data);
+      if (!data) {
+        alert('City not found. Please try again.');
+        return;
+      }
+      gotoPage(data);
     } catch (error) {
       console.error('Error fetching geolocation:', error);
       alert('City not found. Please try again.');
