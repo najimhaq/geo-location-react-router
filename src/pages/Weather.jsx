@@ -119,7 +119,9 @@ const Weather = () => {
           setWeather(data);
         }
       } catch (err) {
-        if (err.name === 'AbortError') return;
+        if (err.name === 'AbortError') {
+          return;
+        }
 
         console.error('Weather fetch error:', err);
 
@@ -152,21 +154,26 @@ const Weather = () => {
   return (
     <main className='min-h-screen overflow-y-auto px-4 py-6 sm:px-6 lg:h-screen lg:overflow-hidden lg:px-6 lg:py-5'>
       <div className='mx-auto flex min-h-screen max-w-7xl flex-col lg:h-full lg:min-h-0'>
-        {/* Header */}
         <header className='mb-4 shrink-0 text-center sm:mb-5'>
-          <div className='flex items-center justify-center gap-3'>
-            <span className='text-5xl sm:text-6xl'>
+          <div className='flex items-center justify-center gap-2 sm:gap-3'>
+            <span className='text-4xl sm:text-5xl lg:text-6xl'>
               {getWeatherIcon(current?.weather_code, current?.is_day)}
             </span>
 
-            <h1 className='text-5xl font-black tracking-tight text-white sm:text-7xl'>
+            <h1 className='text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl'>
               Weather
             </h1>
           </div>
 
-          <div className='mt-2 flex items-center justify-center gap-2 text-lg text-blue-100 sm:text-2xl'>
-            <MapPin size={21} className='text-fuchsia-200 sm:h-6 sm:w-6' />
-            <p>{locationName || 'Current Location'}</p>
+          <div className='mt-2 flex max-w-full items-center justify-center gap-2 text-center text-base text-blue-100 sm:text-xl lg:text-2xl'>
+            <MapPin
+              size={19}
+              className='shrink-0 text-fuchsia-200 sm:h-6 sm:w-6'
+            />
+
+            <p className='max-w-[260px] truncate sm:max-w-md'>
+              {locationName || 'Current Location'}
+            </p>
           </div>
 
           {weather?.timezone && (
@@ -176,34 +183,30 @@ const Weather = () => {
           )}
         </header>
 
-        {/* Loading UI */}
         {loading && <LoadingCard />}
 
-        {/* Error UI */}
         {!loading && error && (
           <ErrorCard onRetry={() => setReloadKey((value) => value + 1)}>
             {error}
           </ErrorCard>
         )}
 
-        {/* Weather dashboard */}
         {!loading && !error && current && daily && (
           <>
-            {/* Current weather */}
-            <section className='shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-white/[0.11] p-4 shadow-[0_22px_55px_rgba(11,16,67,0.32)] backdrop-blur-xl sm:p-6'>
-              <div className='grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center'>
+            <section className='shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-white/[0.11] p-5 shadow-[0_22px_55px_rgba(11,16,67,0.32)] backdrop-blur-xl sm:p-6 lg:p-7'>
+              <div className='grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center'>
                 <div className='text-center lg:text-left'>
                   <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.08] px-4 py-2 text-sm text-blue-100'>
                     <ThermometerSun size={18} className='text-yellow-200' />
                     Current weather
                   </div>
 
-                  <div className='mt-4 flex items-center justify-center gap-3 lg:justify-start'>
-                    <span className='text-6xl sm:text-7xl'>
+                  <div className='mt-5 flex items-center justify-center gap-3 lg:justify-start'>
+                    <span className='text-6xl sm:text-7xl lg:text-8xl'>
                       {getWeatherIcon(current.weather_code, current.is_day)}
                     </span>
 
-                    <p className='text-6xl font-black leading-none text-white sm:text-7xl'>
+                    <p className='text-6xl font-black leading-none text-white sm:text-7xl lg:text-8xl'>
                       {Math.round(current.temperature_2m)}°
                     </p>
                   </div>
@@ -217,23 +220,23 @@ const Weather = () => {
                   </p>
                 </div>
 
-                <div className='grid grid-cols-2 gap-3'>
+                <div className='grid grid-cols-2 gap-3 sm:gap-4'>
                   <WeatherInfo
-                    icon={<Droplets size={20} />}
+                    icon={<Droplets size={21} />}
                     label='Humidity'
                     value={`${current.relative_humidity_2m}%`}
                     color='text-sky-200'
                   />
 
                   <WeatherInfo
-                    icon={<Wind size={20} />}
+                    icon={<Wind size={21} />}
                     label='Wind speed'
                     value={`${Math.round(current.wind_speed_10m)} km/h`}
                     color='text-violet-200'
                   />
 
                   <WeatherInfo
-                    icon={<CloudRain size={20} />}
+                    icon={<CloudRain size={21} />}
                     label='Precipitation'
                     value={`${current.precipitation} mm`}
                     color='text-blue-200'
@@ -249,8 +252,7 @@ const Weather = () => {
               </div>
             </section>
 
-            {/* Forecast */}
-            <section className='mt-4 min-h-0 flex-1'>
+            <section className='mt-5 min-h-0 flex-1 sm:mt-6 lg:mt-4'>
               <div className='mb-3 flex items-center gap-3'>
                 <div className='rounded-xl border border-white/10 bg-white/10 p-2 text-fuchsia-200'>
                   <CalendarDays size={19} />
@@ -261,7 +263,7 @@ const Weather = () => {
                 </h2>
               </div>
 
-              <div className='grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7'>
+              <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7'>
                 {daily.time.map((date, index) => (
                   <ForecastCard
                     key={date}
@@ -278,8 +280,7 @@ const Weather = () => {
               </div>
             </section>
 
-            {/* Sunrise / Sunset */}
-            <section className='mt-3 grid shrink-0 grid-cols-2 gap-3'>
+            <section className='mt-4 grid shrink-0 grid-cols-1 gap-3 sm:grid-cols-2'>
               <SunInfo
                 icon={<Sunrise size={21} />}
                 title='Sunrise'
@@ -295,12 +296,11 @@ const Weather = () => {
           </>
         )}
 
-        {/* Change location */}
-        <div className='mt-3 flex shrink-0 justify-center'>
+        <div className='mt-5 flex shrink-0 justify-center lg:mt-3'>
           <button
             type='button'
             onClick={() => navigate('/')}
-            className='inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-bold text-white shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-blue-200/20'
+            className='inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20 focus:outline-none focus:ring-4 focus:ring-blue-200/20 sm:w-auto lg:py-2.5'
           >
             <ArrowLeft size={20} />
             Change Location
@@ -313,7 +313,7 @@ const Weather = () => {
 
 const WeatherInfo = ({ icon, label, value, color }) => {
   return (
-    <article className='rounded-2xl border border-white/[0.08] bg-[#151b68]/35 p-3 shadow-lg sm:p-4'>
+    <article className='min-w-0 rounded-2xl border border-white/[0.08] bg-[#151b68]/35 p-3 shadow-lg sm:p-4'>
       <div className={`flex items-center gap-2 ${color}`}>
         {typeof icon === 'string' ? (
           <span className='text-lg'>{icon}</span>
@@ -326,7 +326,7 @@ const WeatherInfo = ({ icon, label, value, color }) => {
         </span>
       </div>
 
-      <p className='mt-2 text-lg font-extrabold text-white sm:text-xl'>
+      <p className='mt-2 truncate text-base font-extrabold text-white sm:text-xl'>
         {value}
       </p>
     </article>
@@ -335,28 +335,26 @@ const WeatherInfo = ({ icon, label, value, color }) => {
 
 const ForecastCard = ({ date, icon, status, max, min, rain }) => {
   return (
-    <article className='group flex min-w-0 flex-col items-center rounded-2xl border border-white/10 bg-white/[0.1] px-2 py-3 text-center shadow-lg backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.16] hover:shadow-[0_12px_30px_rgba(168,85,247,0.22)]'>
+    <article className='group flex min-w-0 flex-col items-center rounded-2xl border border-white/10 bg-white/[0.1] px-3 py-4 text-center shadow-lg backdrop-blur-md transition duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.16] hover:shadow-[0_12px_30px_rgba(168,85,247,0.22)] sm:px-2 sm:py-3'>
       <p className='w-full truncate text-xs font-bold text-white sm:text-sm'>
         {date}
       </p>
 
-      <div className='my-3 text-3xl transition duration-300 group-hover:scale-110 sm:text-4xl'>
+      <div className='my-3 text-4xl transition duration-300 group-hover:scale-110'>
         {icon}
       </div>
 
-      <p className='line-clamp-2 min-h-8 text-[10px] leading-4 text-blue-100/85 sm:text-xs'>
+      <p className='line-clamp-2 min-h-9 text-xs leading-4 text-blue-100/85'>
         {status}
       </p>
 
-      <p className='mt-3 text-sm font-extrabold text-white sm:text-base'>
+      <p className='mt-3 text-base font-extrabold text-white'>
         {Math.round(max)}°
         <span className='ml-1 text-blue-100/60'>{Math.round(min)}°</span>
       </p>
 
       {typeof rain === 'number' && (
-        <p className='mt-1 text-[10px] text-sky-200 sm:text-xs'>
-          Rain: {rain}%
-        </p>
+        <p className='mt-1 text-xs text-sky-200'>Rain: {rain}%</p>
       )}
     </article>
   );

@@ -26,6 +26,7 @@ input {
   font: inherit;
 }
 
+/* Desktop: dashboard one viewport-এ থাকবে */
 @media (min-width: 1024px) {
   html,
   body,
@@ -35,6 +36,7 @@ input {
   }
 }
 
+/* Mobile/tablet: প্রয়োজন হলে natural vertical scroll */
 @media (max-width: 1023px) {
   html,
   body,
@@ -45,7 +47,6 @@ input {
   }
 }
 
-/* Scrollbar only appears when mobile/tablet content needs it */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(167, 139, 250, 0.6) transparent;
